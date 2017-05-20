@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Employes";
+}
+    <table class="statistic">
+        <caption>Список сотрудников</caption>
+
+        <tr>
+            <td><p>ID</p></td>
+            <td><p>Имя</p></td>
+            <td><p>Фамилия</p></td>
+            <td><p>Отчествоа</p></td>
+            <td><p>Дата добавления</p></td>
+            <td><p>Должность</p></td>
+            <td><p>Company</p></td>
+            <td></td>
+        </tr>
+        @foreach (var entity in ViewBag.entites)
+            {
+            <tr>
+                <td><input type="hidden" value="@entity.EmployeeID" class="id" ><p >@entity.EmployeeID </p></td>
+                <td><input type="text" value="@entity.Name" class="name"></td>
+                <td><input type="text" value="@entity.Surname" class="surname"></td>
+                <td><input type="text" value="@entity.Lastname" class="lastname"></td>
+                <td><input type="text" value="@entity.DateHiring" class="date"> </td>
+                <td><input type="text" value="@entity.Position" class="position"></td>
+                <td><input type="text" value="@entity.CompanyID" class="compnyId"></td>
+                <td><input type="button" value="Изменить" class="update"></td>
+                <td><input type="button" value="Удалить" class="delete"></td>
+            </tr>
+        }
+        <tr>
+            <td></td>
+            <td><input type="text" value="" class="name"></td>
+            <td><input type="text" value="" class="surname"></td>
+            <td><input type="text" value="" class="lastname"></td>
+            <td><input type="text" value="" class="date"></td>
+            <td><input type="text" value="" class="position"></td>
+            <td><input type="text" value="" class="compnyId"></td>
+            <td><input type="button" value="Добавить" class="create"></td>
+        </tr>
+    </table>
+
+<script>
+     $(document).ready(function () {
+         $(document).on('click', '.create, .update', function () {
+             var id = $(this).closest('tr').find('input.id').val();
+             var name = $(this).closest('tr').find('input.name').val();
+             var surname = $(this).closest('tr').find('input.surname').val();
+             var lastname = $(this).closest('tr').find('input.lastname').val();
+             var date = $(this).closest('tr').find('input.date').val();
+             var position = $(this).closest('tr').find('input.position').val();
+             var companyId = $(this).closest('tr').find('input.compnyId').val();
+             $.ajax({
+                 type: 'POST',
+                 url: '/Employee/CreateOrUpdate',
+                 data: { EmployeeID: id, Name: name, Surname: surname, Lastname: lastname, DateHiring: date, Position: position, CompanyID: companyId },
+                 success: function (data) {
+                     if ($(this).attr('class') != 'create') {
+                         location.reload();
+                     }
+                 },
+                 async: true
+             });
+         });
+     });
+$(document).ready(function () {
+    $(document).on('click', '.delete', function () {
+        var id = $(this).closest('tr').find('input.id').val();
+        $.ajax({
+            type: 'POST',
+            url: '/Employee/Delete',
+            data: {id: id},
+            success: function (data) {
+                    location.reload();
+            },
+            async: true
+        });
+    });
+});
+</script>
